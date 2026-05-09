@@ -1,0 +1,63 @@
+{
+  "title": "2. Service Insights & Authentication Logs",
+  "uid": "service-insights-01",
+  "tags": [
+    "services",
+    "auth",
+    "payment"
+  ],
+  "timezone": "browser",
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Authentication Failures vs Successes",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(rate({container=\"auth-service\"} |= \"failed\" [1m]))",
+          "legendFormat": "Failed Logins",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate({container=\"auth-service\"} |= \"successful\" [1m]))",
+          "legendFormat": "Successful Logins",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Payment Gateway Status",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(rate({container=\"payment-service\"} |= \"processed successfully\" [1m]))",
+          "legendFormat": "Success",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate({container=\"payment-service\"} |= \"declined\" [1m]))",
+          "legendFormat": "Declined",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(rate({container=\"payment-service\"} |= \"Timeout Exception\" [1m]))",
+          "legendFormat": "Gateway Timeout",
+          "refId": "C"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "title": "1. System Overview & Anomaly Detection",
+  "uid": "system-overview-01",
+  "tags": [
+    "observability",
+    "logs"
+  ],
+  "timezone": "browser",
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Global Error Rate (Anomalies)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(rate({container=~\"^.*-service$\"} |= \"(?i)error|fail|timeout|refused\" [1m]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 20
+          }
+        }
+      }
+    },
+    {
+      "type": "logs",
+      "title": "Live Error Log Stream",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "{container=~\"^.*-service$\"} |= \"(?i)error|fail|timeout|refused\"",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showLabels": true,
+        "showTime": true,
+        "wrapLogMessage": true
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Traffic by Service",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "sum by (container) (rate({container=~\"^.*-service$\"} [1m]))",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Total Errors (Last 1h)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({container=~\"^.*-service$\"} |= \"(?i)error\" [1h]))",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}
