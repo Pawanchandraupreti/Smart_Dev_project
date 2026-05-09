@@ -1,0 +1,22 @@
+groups:
+  - name: anomaly_alerts
+    rules:
+      - alert: HighErrorRateSpike
+        expr: |
+          sum(rate({container=~"^.*-service$"} |= "(?i)error" [1m])) > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High Error Rate Detected"
+          description: "An anomaly was detected! Error logs have exceeded the normal threshold. Check Grafana immediately."
+          
+      - alert: PaymentGatewayFailure
+        expr: |
+          sum(rate({container="payment-service"} |= "Timeout Exception" [1m])) > 0
+        for: 0m
+        labels:
+          severity: high
+        annotations:
+          summary: "Payment Gateway is timing out"
+          description: "The payment service is failing to reach the external gateway. Customers cannot checkout."
