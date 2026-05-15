@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Service Simulator Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .service { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 15px; margin-right: 10px; border: none; border-radius: 4px; cursor: pointer; color: white; }
+        .btn-success { background-color: #28a745; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-success:hover { background-color: #218838; }
+        .btn-danger:hover { background-color: #c82333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Microservice Control Panel</h1>
+        <p>Use this panel to generate logs and simulate errors in the backend services.</p>
+        
+        <div class="service">
+            <h3>Auth Service</h3>
+            <button class="btn-success" onclick="callApi('auth', 'login')">Simulate Login</button>
+            <button class="btn-danger" onclick="callApi('auth', 'simulate-error')">Trigger Auth Error</button>
+        </div>
+        
+        <div class="service">
+            <h3>Payment Service</h3>
+            <button class="btn-success" onclick="callApi('payment', 'pay')">Process Payment</button>
+            <button class="btn-danger" onclick="callApi('payment', 'simulate-error')">Trigger Payment Error</button>
+        </div>
+
+        <div class="service">
+            <h3>Order Service</h3>
+            <button class="btn-success" onclick="callApi('order', 'order')">Place Order</button>
+            <button class="btn-danger" onclick="callApi('order', 'simulate-error')">Trigger Order Error</button>
+        </div>
+
+        <div class="service">
+            <h3>Notification Service</h3>
+            <button class="btn-success" onclick="callApi('notification', 'send')">Send Notification</button>
+            <button class="btn-danger" onclick="callApi('notification', 'simulate-error')">Trigger Notification Error</button>
+        </div>
+    </div>
+
+    <script>
+        async function callApi(service, action) {
+            try {
+                const res = await fetch(`/api/${service}/${action}`);
+                const data = await res.json();
+                console.log(`Response from ${service}: `, data);
+                if (res.ok) {
+                    alert(`✅ Success: ${JSON.stringify(data)}`);
+                } else {
+                    alert(`❌ Error: ${JSON.stringify(data)}`);
+                }
+            } catch (err) {
+                alert(`⚠️ Request failed: ${err.message}`);
+            }
+        }
+    </script>
+</body>
+</html>
