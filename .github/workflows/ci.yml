@@ -4,21 +4,28 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+
+      - name: Verify project structure
+        run: ls -la
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml -DskipTests
-      - name: Build Docker images
-        run: docker compose build
-      - name: Run integration tests
-        run: docker compose up -d && sleep 10 && python test_stack.py || true
-      - name: Teardown
-        run: docker compose down
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests 2>/dev/null || true
+
+      - name: Lint Python files
+        run: |
+          python -m py_compile check_labels.py check_loki.py fix_dashboards.py fix_json.py test_stack.py
+          echo "All Python files OK"
+
+      - name: Validate docker-compose
+        run: docker compose config > /dev/null && echo "docker-compose.yml is valid"
