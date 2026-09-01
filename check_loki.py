@@ -21,3 +21,5 @@ try:
                     print(f"Sample line: {stream['values'][0][1]}")
 except Exception as e:
     print('Error querying Loki for auth-service:', e)
+
+
