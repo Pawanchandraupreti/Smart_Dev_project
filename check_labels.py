@@ -11,3 +11,5 @@ try:
         print("Available container labels in Loki:", data.get('data', []))
 except Exception as e:
     print('Error:', e)
+
+
