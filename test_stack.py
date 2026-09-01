@@ -42,3 +42,4 @@ try:
             print(f"- ALERT: {alert['labels'].get('alertname')} -> {alert['annotations'].get('summary')}")
 except Exception as e:
     print(f"Failed to reach Alertmanager: {e}")
+
